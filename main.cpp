@@ -111,7 +111,7 @@ int searchPokemonByName(const vector<Pokemon> &pokemonList, const string &name) 
         }
     }
     return -1;
-;
+}
 
 void displayPokemonDetails(const Pokemon &pokemon) {
     cout << "\n--- Pokemon Details ---\n";
