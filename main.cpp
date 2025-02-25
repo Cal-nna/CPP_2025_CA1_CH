@@ -78,14 +78,28 @@ void displayAllPokemon(const vector<Pokemon> &pokemonList) {
         return;
     }
 
-    cout << "\n--- Pokemon List ---\n";
+    cout << "\n---------------------------------------- Pokemon List ----------------------------------------\n";
+    cout << "Name           Dex   Height   Type           HP  Atk  Def  SpA  SpD  Spe" << endl;
+    cout << "--------------------------------------------------------------------------------------------\n";
+
     for (const auto &pokemon : pokemonList) {
-        cout << pokemon.name << ", " << pokemon.dex << ", " << pokemon.height << ", "
-             << pokemon.type << ", " << pokemon.hp << ", " << pokemon.attack << ", "
-             << pokemon.defense << ", " << pokemon.spAttack << ", " << pokemon.spDefense
-             << ", " << pokemon.speed << endl;
+        cout << pokemon.name;
+
+        int namePadding = 15 - pokemon.name.length();
+        cout << string(namePadding, ' ') << pokemon.dex << "    "
+             << pokemon.height << "     "
+             << pokemon.type;
+
+        int typePadding = 15 - pokemon.type.length();
+        cout << string(typePadding, ' ') << pokemon.hp << "   "
+             << pokemon.attack << "   "
+             << pokemon.defense << "   "
+             << pokemon.spAttack << "   "
+             << pokemon.spDefense << "   "
+             << pokemon.speed << endl;
     }
-    cout << "----------------------\n";
+
+    cout << "--------------------------------------------------------------------------------------------\n";
 }
 
 int main() {
@@ -95,7 +109,7 @@ int main() {
     int choice;
     do {
         cout << "\n=== Pokemon Database Menu ===\n";
-        cout << "1. Display all Pokémon\n";
+        cout << "1. Display all Pokemon\n";
         cout << "2. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
