@@ -72,6 +72,7 @@ void readCSV(const string &filename, vector<Pokemon> &pokemonList) {
     fin.close();
 }
 
+//Q1
 void displayAllPokemon(const vector<Pokemon> &pokemonList) {
     if (pokemonList.empty()) {
         cout << "No Pokemon data available.\n";
@@ -102,6 +103,32 @@ void displayAllPokemon(const vector<Pokemon> &pokemonList) {
     cout << "--------------------------------------------------------------------------------------------\n";
 }
 
+//Q2
+int searchPokemonByName(const vector<Pokemon> &pokemonList, const string &name) {
+    for (size_t i = 0; i < pokemonList.size(); i++) {
+        if (pokemonList[i].name == name) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void displayPokemonDetails(const Pokemon &pokemon) {
+    cout << "\n--- Pokemon Details ---\n";
+    cout << "Name: " << pokemon.name << "\n";
+    cout << "Dex No: " << pokemon.dex << "\n";
+    cout << "Height: " << pokemon.height << "\n";
+    cout << "Type: " << pokemon.type << "\n";
+    cout << "HP: " << pokemon.hp << "\n";
+    cout << "Attack: " << pokemon.attack << "\n";
+    cout << "Defense: " << pokemon.defense << "\n";
+    cout << "Special Attack: " << pokemon.spAttack << "\n";
+    cout << "Special Defense: " << pokemon.spDefense << "\n";
+    cout << "Speed: " << pokemon.speed << "\n";
+    cout << "------------------------\n";
+}
+
+
 int main() {
     vector<Pokemon> pokemonList;
     readCSV("pokemon_data.csv", pokemonList);
@@ -110,21 +137,38 @@ int main() {
     do {
         cout << "\n=== Pokemon Database Menu ===\n";
         cout << "1. Display all Pokemon\n";
-        cout << "2. Exit\n";
+        cout << "2. Search Pokemon by Name\n";
+        cout << "3. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
+        cin.ignore(); // Ignore newline from previous input
 
         switch (choice) {
             case 1:
                 displayAllPokemon(pokemonList);
+            break;
+            case 2: {
+                string searchName;
+                cout << "Enter Pokemon name: ";
+                getline(cin, searchName);
+
+                int index = searchPokemonByName(pokemonList, searchName);
+                if (index != -1) {
+                    displayPokemonDetails(pokemonList[index]);
+                } else {
+                    cout << "Pokemon '" << searchName << "' not found.\n";
+                }
                 break;
-            case 2:
+            }
+            case 3:
                 cout << "Exiting program. Goodbye!\n";
-                break;
+            break;
             default:
                 cout << "Invalid choice! Please try again.\n";
         }
-    } while (choice != 2);
+    } while (choice != 3);
 
     return 0;
 }
+
+
