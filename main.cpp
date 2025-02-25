@@ -1,25 +1,82 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the
-    // <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+struct Pokemon {
+    string name;
+    int dex;
+    float height;
+    string type;
+    int hp;
+    int attack;
+    int defense;
+    int spAttack;
+    int spDefense;
+    int speed;
+};
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code.
-        // We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/>
-        // breakpoint for you, but you can always add more by pressing
-        // <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
-    }
+void parse(string line, Pokemon &pokemon) {
+    stringstream ss(line);
+    string temp;
 
-    return 0;
+    getline(ss, pokemon.name, ',');
+
+    getline(ss, temp, ',');
+    pokemon.dex = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.height = stof(temp);
+
+    getline(ss, pokemon.type, ',');
+
+    getline(ss, temp, ',');
+    pokemon.hp = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.attack = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.defense = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.spAttack = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.spDefense = stoi(temp);
+
+    getline(ss, temp, ',');
+    pokemon.speed = stoi(temp);
 }
 
-// TIP See CLion help at <a
-// href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>.
-//  Also, you can try interactive lessons for CLion by selecting
-//  'Help | Learn IDE Features' from the main menu.
+void readCSV(const string &filename) {
+    ifstream fin(filename);
+
+    if (!fin) {
+        cout << "Failed to open file: " << filename << endl;
+        return;
+    }
+
+    string line;
+    while (getline(fin, line)) {
+        // if (line.empty()) continue;
+
+        Pokemon pokemon;
+        try {
+            parse(line, pokemon);
+            cout << pokemon.name << ", " << pokemon.dex << ", " << pokemon.height << ", "
+                 << pokemon.type << ", " << pokemon.hp << ", " << pokemon.attack << ", "
+                 << pokemon.defense << ", " << pokemon.spAttack << ", " << pokemon.spDefense
+                 << ", " << pokemon.speed << endl;
+        } catch (const invalid_argument &e) {
+            cerr << "Error parsing line: " << line << " | Exception: " << e.what() << endl;
+        }
+    }
+
+    fin.close();
+}
+
+int main() {
+    readCSV("pokemon_data.csv");  // Change this to the actual CSV file name
+    return 0;
+}
