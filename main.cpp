@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
+
 using namespace std;
 
 struct Pokemon {
@@ -16,67 +18,99 @@ struct Pokemon {
     int speed;
 };
 
-void parse(string line, Pokemon &pokemon) {
+bool parse(const string &line, Pokemon &pokemon) { //parse is a bool to act as a check to see if the data is read correct
     stringstream ss(line);
     string temp;
+    vector<string> values;
 
-    getline(ss, pokemon.name, ',');
+    while (getline(ss, temp, ',')) {
+        values.push_back(temp);
+    }
 
-    getline(ss, temp, ',');
-    pokemon.dex = stoi(temp);
+    if (values.size() != 10) {
+        cerr << "Error: Incorrect number of fields in line: " << line << endl;
+        return false;
+    }
 
-    getline(ss, temp, ',');
-    pokemon.height = stof(temp);
+    try {
+        pokemon.name = values[0];
+        pokemon.dex = stoi(values[1]);
+        pokemon.height = stof(values[2]);
+        pokemon.type = values[3];
+        pokemon.hp = stoi(values[4]);
+        pokemon.attack = stoi(values[5]);
+        pokemon.defense = stoi(values[6]);
+        pokemon.spAttack = stoi(values[7]);
+        pokemon.spDefense = stoi(values[8]);
+        pokemon.speed = stoi(values[9]);
+    } catch (const invalid_argument &e) {//error catchings, points out any error within the csv file
+        cerr << "Error: Invalid number format in line: " << line << " | Exception: " << e.what() << endl;
+        return false;
+    }
 
-    getline(ss, pokemon.type, ',');
-
-    getline(ss, temp, ',');
-    pokemon.hp = stoi(temp);
-
-    getline(ss, temp, ',');
-    pokemon.attack = stoi(temp);
-
-    getline(ss, temp, ',');
-    pokemon.defense = stoi(temp);
-
-    getline(ss, temp, ',');
-    pokemon.spAttack = stoi(temp);
-
-    getline(ss, temp, ',');
-    pokemon.spDefense = stoi(temp);
-
-    getline(ss, temp, ',');
-    pokemon.speed = stoi(temp);
+    return true;
 }
 
-void readCSV(const string &filename) {
+void readCSV(const string &filename, vector<Pokemon> &pokemonList) {
     ifstream fin(filename);
 
     if (!fin) {
-        cout << "Failed to open file: " << filename << endl;
+        cerr << "Failed to open file: " << filename << endl;
         return;
     }
 
     string line;
     while (getline(fin, line)) {
-        // if (line.empty()) continue;
+        if (line.empty()) continue;
 
         Pokemon pokemon;
-        try {
-            parse(line, pokemon);
-            cout << pokemon.name << ", " << pokemon.dex << ", " << pokemon.height << ", "
-                 << pokemon.type << ", " << pokemon.hp << ", " << pokemon.attack << ", "
-                 << pokemon.defense << ", " << pokemon.spAttack << ", " << pokemon.spDefense
-                 << ", " << pokemon.speed << endl;
-        } catch (const invalid_argument &e) {
-            cerr << "Error parsing line: " << line << " | Exception: " << e.what() << endl;
+        if (parse(line, pokemon)) {
+            pokemonList.push_back(pokemon);
         }
     }
 
     fin.close();
 }
 
+void displayAllPokemon(const vector<Pokemon> &pokemonList) {
+    if (pokemonList.empty()) {
+        cout << "No Pokemon data available.\n";
+        return;
+    }
+
+    cout << "\n--- Pokemon List ---\n";
+    for (const auto &pokemon : pokemonList) {
+        cout << pokemon.name << ", " << pokemon.dex << ", " << pokemon.height << ", "
+             << pokemon.type << ", " << pokemon.hp << ", " << pokemon.attack << ", "
+             << pokemon.defense << ", " << pokemon.spAttack << ", " << pokemon.spDefense
+             << ", " << pokemon.speed << endl;
+    }
+    cout << "----------------------\n";
+}
+
 int main() {
-    readCSV("pokemon_data.csv");  // Change this to the actual CSV file name
+    vector<Pokemon> pokemonList;
+    readCSV("pokemon_data.csv", pokemonList);
+
+    int choice;
+    do {
+        cout << "\n=== Pokemon Database Menu ===\n";
+        cout << "1. Display all Pokémon\n";
+        cout << "2. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                displayAllPokemon(pokemonList);
+                break;
+            case 2:
+                cout << "Exiting program. Goodbye!\n";
+                break;
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 2);
+
     return 0;
 }
