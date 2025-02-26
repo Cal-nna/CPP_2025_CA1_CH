@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -81,7 +82,7 @@ void displayAllPokemon(const vector<Pokemon> &pokemonList) {
     }
 
     cout << "\n---------------------------------------- Pokemon List ----------------------------------------\n";
-    cout << "Name           Dex   Height   Type           HP  Atk  Def  SpA  SpD  Spe" << endl;
+    cout << "Name           Dex   Height(m) Type          HP  Atk  Def  SpA  SpD  Spe" << endl;
     cout << "--------------------------------------------------------------------------------------------\n";
 
     for (const auto &pokemon : pokemonList) {
@@ -105,9 +106,17 @@ void displayAllPokemon(const vector<Pokemon> &pokemonList) {
 }
 
 //Q2
+string toLowerCase(const string &str) { //converts name to lower case
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
+
 int searchPokemonByName(const vector<Pokemon> &pokemonList, const string &name) {
+    string searchNameLower = toLowerCase(name);
+
     for (size_t i = 0; i < pokemonList.size(); i++) {
-        if (pokemonList[i].name == name) {
+        if (toLowerCase(pokemonList[i].name) == searchNameLower) {
             return i;
         }
     }
@@ -118,7 +127,7 @@ void displayPokemonDetails(const Pokemon &pokemon) {
     cout << "\n--- Pokemon Details ---\n";
     cout << "Name: " << pokemon.name << "\n";
     cout << "Dex No: " << pokemon.dex << "\n";
-    cout << "Height: " << pokemon.height << "\n";
+    cout << "Height: " << pokemon.height << "m\n";
     cout << "Type: " << pokemon.type << "\n";
     cout << "HP: " << pokemon.hp << "\n";
     cout << "Attack: " << pokemon.attack << "\n";
