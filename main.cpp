@@ -162,6 +162,42 @@ void displayTypeCounts(const unordered_map<string, int> &typeCounts) {
     cout << "---------------------------\n";
 }
 
+//Q4
+void displayPokemonByType(const vector<Pokemon> &pokemonList, const string &type) {
+    string searchTypeLower = toLowerCase(type);
+    bool found = false;
+
+    cout << "\n---------------------------------------- Pokemon of Type: " << type << " ----------------------------------------\n";
+    cout << "Name           Dex   Height   Type           HP  Atk  Def  SpA  SpD  Spe" << endl;
+    cout << "----------------------------------------------------------------------------------------------------------\n";
+
+    for (const auto &pokemon : pokemonList) {
+        if (toLowerCase(pokemon.type) == searchTypeLower) {
+            found = true;
+            cout << pokemon.name;
+
+            int namePadding = 15 - pokemon.name.length();
+            cout << string(namePadding, ' ') << pokemon.dex << "    "
+                 << pokemon.height << "     "
+                 << pokemon.type;
+
+            int typePadding = 15 - pokemon.type.length();
+            cout << string(typePadding, ' ') << pokemon.hp << "   "
+                 << pokemon.attack << "   "
+                 << pokemon.defense << "   "
+                 << pokemon.spAttack << "   "
+                 << pokemon.spDefense << "   "
+                 << pokemon.speed << endl;
+        }
+    }
+
+    if (!found) {
+        cout << "No Pokemon found with type '" << type << "'.\n";
+    }
+
+    cout << "----------------------------------------------------------------------------------------------------------\n";
+}
+
 int main() {
     vector<Pokemon> pokemonList;
     readCSV("pokemon_data.csv", pokemonList);
@@ -171,8 +207,9 @@ int main() {
         cout << "\n=== Pokemon Database Menu ===\n";
         cout << "1. Display all Pokemon\n";
         cout << "2. Search Pokemon by Name\n";
-        cout << "3. Count Pokemon by Type\n";  // New menu option
-        cout << "4. Exit\n";
+        cout << "3. Count Pokemon by Type\n";
+        cout << "4. List Pokemon by Type\n";
+        cout << "5. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -199,7 +236,15 @@ int main() {
                 displayTypeCounts(typeCounts);
                 break;
             }
-            case 4:
+            case 4: {
+                string searchType;
+                cout << "Enter Pokemon type: ";
+                getline(cin, searchType);
+
+                displayPokemonByType(pokemonList, searchType);
+                break;
+            }
+            case 5:
                 cout << "Exiting program. Goodbye!\n";
             break;
             default:
