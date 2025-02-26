@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -128,6 +129,29 @@ void displayPokemonDetails(const Pokemon &pokemon) {
     cout << "------------------------\n";
 }
 
+//Q3
+unordered_map<string, int> countPokemonByType(const vector<Pokemon> &pokemonList) {
+    unordered_map<string, int> typeCounts;
+
+    for (const auto &pokemon : pokemonList) {
+        typeCounts[pokemon.type]++;
+    }
+
+    return typeCounts;
+}
+
+void displayTypeCounts(const unordered_map<string, int> &typeCounts) {
+    if (typeCounts.empty()) {
+        cout << "No data available to count.\n";
+        return;
+    }
+
+    cout << "\n--- Pokemon Type Counts ---\n";
+    for (const auto &entry : typeCounts) {
+        cout << entry.first << ": " << entry.second << endl;
+    }
+    cout << "---------------------------\n";
+}
 
 int main() {
     vector<Pokemon> pokemonList;
@@ -138,10 +162,11 @@ int main() {
         cout << "\n=== Pokemon Database Menu ===\n";
         cout << "1. Display all Pokemon\n";
         cout << "2. Search Pokemon by Name\n";
-        cout << "3. Exit\n";
+        cout << "3. Count Pokemon by Type\n";  // New menu option
+        cout << "4. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
-        cin.ignore(); // Ignore newline from previous input
+        cin.ignore();
 
         switch (choice) {
             case 1:
@@ -160,13 +185,18 @@ int main() {
                 }
                 break;
             }
-            case 3:
+            case 3: {
+                unordered_map<string, int> typeCounts = countPokemonByType(pokemonList);
+                displayTypeCounts(typeCounts);
+                break;
+            }
+            case 4:
                 cout << "Exiting program. Goodbye!\n";
             break;
             default:
                 cout << "Invalid choice! Please try again.\n";
         }
-    } while (choice != 3);
+    } while (choice != 4);
 
     return 0;
 }
