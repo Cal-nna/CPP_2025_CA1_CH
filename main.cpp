@@ -198,6 +198,54 @@ void displayPokemonByType(const vector<Pokemon> &pokemonList, const string &type
     cout << "----------------------------------------------------------------------------------------------------------\n";
 }
 
+//Q5 is quite complicated due to my odd obligation to the base stats,
+// this looks daunting because of the user input accountability,
+//not only for case but proper wording like Special Attack
+int findStatExtremes(const vector<Pokemon> &pokemonList) {
+    if (pokemonList.empty()) {
+        cout << "No Pokemon data available.\n";
+        return -1;
+    }
+
+    cout << "Choose a base stat to analyze (HP, Attack, Defense, SpAttack, SpDefense, Speed): ";
+    string statChoice;
+    getline(cin, statChoice);
+
+    int (Pokemon::*statPtr) = nullptr;
+
+    if (statChoice == "HP" || statChoice == "hp") statPtr = &Pokemon::hp;
+    else if (statChoice == "Attack" || statChoice == "attack") statPtr = &Pokemon::attack;
+    else if (statChoice == "Defense" || statChoice == "defense") statPtr = &Pokemon::defense;
+    else if (statChoice == "SpAttack" || statChoice == "spattack" || statChoice == "Special Attack") statPtr = &Pokemon::spAttack;
+    else if (statChoice == "SpDefense" || statChoice == "spdefense" || statChoice == "Special Defense") statPtr = &Pokemon::spDefense;
+    else if (statChoice == "Speed" || statChoice == "speed") statPtr = &Pokemon::speed;
+    else {
+        cout << "Invalid stat choice.\n";
+        return -1;
+    }
+
+    const Pokemon *highest = &pokemonList[0];
+    const Pokemon *lowest = &pokemonList[0];
+    int total = 0;
+
+    for (const auto &pokemon : pokemonList) {
+        int statValue = pokemon.*statPtr;
+        total += statValue;
+        if (statValue > highest->*statPtr) highest = &pokemon;
+        if (statValue < lowest->*statPtr) lowest = &pokemon;
+    }
+
+    int average = total / pokemonList.size();
+
+    cout << "\n--- " << statChoice << " Analysis ---\n";
+    cout << "Highest: " << highest->name << " (" << highest->*statPtr << " " << statChoice << ")\n";
+    cout << "Lowest: " << lowest->name << " (" << lowest->*statPtr << " " << statChoice << ")\n";
+    cout << "Average " << statChoice << ": " << average << "\n";
+    cout << "---------------------------------\n";
+
+    return average;
+}
+
 int main() {
     vector<Pokemon> pokemonList;
     readCSV("pokemon_data.csv", pokemonList);
@@ -209,7 +257,8 @@ int main() {
         cout << "2. Search Pokemon by Name\n";
         cout << "3. Count Pokemon by Type\n";
         cout << "4. List Pokemon by Type\n";
-        cout << "5. Exit\n";
+        cout << "5. Find Highest, Lowset and Average Pokemon Stat\n";
+        cout << "6. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -244,7 +293,9 @@ int main() {
                 displayPokemonByType(pokemonList, searchType);
                 break;
             }
-            case 5:
+            case 5: {findStatExtremes(pokemonList);
+                break;}
+            case 6:
                 cout << "Exiting program. Goodbye!\n";
             break;
             default:
