@@ -245,6 +245,19 @@ int findStatExtremes(const vector<Pokemon> &pokemonList) {
 
     return average;
 }
+//Q6 connects to the display all pokemon function
+vector<Pokemon> searchPokemonByType(const vector<Pokemon> &pokemonList, const string &partialType) {
+    vector<Pokemon> matchingPokemon;
+    string searchTypeLower = toLowerCase(partialType);
+
+    for (auto it = pokemonList.begin(); it != pokemonList.end(); ++it) {
+        if (toLowerCase(it->type).find(searchTypeLower) != string::npos) {
+            matchingPokemon.push_back(*it);
+        }
+    }
+
+    return matchingPokemon;
+}
 
 int main() {
     vector<Pokemon> pokemonList;
@@ -256,9 +269,10 @@ int main() {
         cout << "1. Display all Pokemon\n";
         cout << "2. Search Pokemon by Name\n";
         cout << "3. Count Pokemon by Type\n";
-        cout << "4. List Pokemon by Type\n";
+        cout << "4. List Pokemon by Dex Number\n";
         cout << "5. Find Highest, Lowset and Average Pokemon Stat\n";
-        cout << "6. Exit\n";
+        cout << "6. Find Pokemon by Type\n";
+        cout << "7. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -295,7 +309,17 @@ int main() {
             }
             case 5: {findStatExtremes(pokemonList);
                 break;}
-            case 6:
+            case 6: {
+                string searchType;
+                cout << "Enter part of the type to search for: ";
+                getline(cin, searchType);
+
+                vector<Pokemon> results = searchPokemonByType(pokemonList, searchType);
+                displayAllPokemon(results);
+                break;
+            }
+
+            case 7:
                 cout << "Exiting program. Goodbye!\n";
             break;
             default:
