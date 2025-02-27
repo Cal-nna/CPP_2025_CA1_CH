@@ -163,16 +163,15 @@ void displayTypeCounts(const unordered_map<string, int> &typeCounts) {
 }
 
 //Q4
-void displayPokemonByType(const vector<Pokemon> &pokemonList, const string &type) {
-    string searchTypeLower = toLowerCase(type);
+void displayPokemonByDex(const vector<Pokemon> &pokemonList, int dexNumber) {
     bool found = false;
 
-    cout << "\n---------------------------------------- Pokemon of Type: " << type << " ----------------------------------------\n";
+    cout << "\n------------------------ Pokemon with Dex #: " << dexNumber << " ------------------------\n";
     cout << "Name           Dex   Height   Type           HP  Atk  Def  SpA  SpD  Spe" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------\n";
+    cout << "--------------------------------------------------------------------------------\n";
 
     for (const auto &pokemon : pokemonList) {
-        if (toLowerCase(pokemon.type) == searchTypeLower) {
+        if (pokemon.dex == dexNumber) {
             found = true;
             cout << pokemon.name;
 
@@ -192,11 +191,12 @@ void displayPokemonByType(const vector<Pokemon> &pokemonList, const string &type
     }
 
     if (!found) {
-        cout << "No Pokemon found with type '" << type << "'.\n";
+        cout << "No Pokemon found with Dex number '" << dexNumber << "'.\n";
     }
 
-    cout << "----------------------------------------------------------------------------------------------------------\n";
+    cout << "--------------------------------------------------------------------------------\n";
 }
+
 
 //Q5 is quite complicated due to my odd obligation to the base stats,
 // this looks daunting because of the user input accountability,
@@ -286,11 +286,11 @@ int main() {
                 break;
             }
             case 4: {
-                string searchType;
-                cout << "Enter Pokemon type: ";
-                getline(cin, searchType);
+                int searchDex;
+                cout << "Enter Dex number: ";
+                cin >> searchDex;
 
-                displayPokemonByType(pokemonList, searchType);
+                displayPokemonByDex(pokemonList, searchDex);
                 break;
             }
             case 5: {findStatExtremes(pokemonList);
