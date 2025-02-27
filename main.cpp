@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -81,28 +82,35 @@ void displayAllPokemon(const vector<Pokemon> &pokemonList) {
         return;
     }
 
-    cout << "\n---------------------------------------- Pokemon List ----------------------------------------\n";
-    cout << "Name           Dex   Height(m) Type          HP  Atk  Def  SpA  SpD  Spe" << endl;
-    cout << "--------------------------------------------------------------------------------------------\n";
+    cout << "\n--------------------------------------------------------------------------------------------------\n";
+    cout << left << setw(15) << "Name"
+         << setw(6) << "Dex"
+         << setw(10) << "Height(m)"
+         << setw(15) << "Type"
+         << setw(5) << "HP"
+         << setw(5) << "Atk"
+         << setw(5) << "Def"
+         << setw(5) << "SpA"
+         << setw(5) << "SpD"
+         << setw(5) << "Spe"
+         << endl;
+    cout << "--------------------------------------------------------------------------------------------------\n";
 
     for (const auto &pokemon : pokemonList) {
-        cout << pokemon.name;
-
-        int namePadding = 15 - pokemon.name.length();
-        cout << string(namePadding, ' ') << pokemon.dex << "    "
-             << pokemon.height << "     "
-             << pokemon.type;
-
-        int typePadding = 15 - pokemon.type.length();
-        cout << string(typePadding, ' ') << pokemon.hp << "   "
-             << pokemon.attack << "   "
-             << pokemon.defense << "   "
-             << pokemon.spAttack << "   "
-             << pokemon.spDefense << "   "
-             << pokemon.speed << endl;
+        cout << left << setw(15) << pokemon.name
+             << setw(6) << pokemon.dex
+             << fixed << setprecision(2) << setw(10) << pokemon.height
+             << setw(15) << pokemon.type
+             << setw(5) << pokemon.hp
+             << setw(5) << pokemon.attack
+             << setw(5) << pokemon.defense
+             << setw(5) << pokemon.spAttack
+             << setw(5) << pokemon.spDefense
+             << setw(5) << pokemon.speed
+             << endl;
     }
 
-    cout << "--------------------------------------------------------------------------------------------\n";
+    cout << "--------------------------------------------------------------------------------------------------\n";
 }
 
 //Q2
@@ -258,6 +266,49 @@ vector<Pokemon> searchPokemonByType(const vector<Pokemon> &pokemonList, const st
 
     return matchingPokemon;
 }
+//Q7
+void displayPokemonByHeightDescending(vector<Pokemon> &pokemonList) {
+    if (pokemonList.empty()) {
+        cout << "No Pokemon data available.\n";
+        return;
+    }
+
+    sort(pokemonList.begin(), pokemonList.end(), [](const Pokemon &a, const Pokemon &b) {
+        return a.height > b.height;
+    });
+
+    cout << "\n------------------------ Pokemon Sorted by Height (Descending) ------------------------\n";
+    cout << left << setw(15) << "Name"
+         << setw(6) << "Dex"
+         << setw(10) << "Height(m)"
+         << setw(15) << "Type"
+         << setw(5) << "HP"
+         << setw(5) << "Atk"
+         << setw(5) << "Def"
+         << setw(5) << "SpA"
+         << setw(5) << "SpD"
+         << setw(5) << "Spe"
+         << endl;
+    cout << "--------------------------------------------------------------------------------------\n";
+
+    for (const auto &pokemon : pokemonList) {
+        cout << left << setw(15) << pokemon.name
+             << setw(6) << pokemon.dex
+             << fixed << setprecision(2) << setw(10) << pokemon.height
+             << setw(15) << pokemon.type
+             << setw(5) << pokemon.hp
+             << setw(5) << pokemon.attack
+             << setw(5) << pokemon.defense
+             << setw(5) << pokemon.spAttack
+             << setw(5) << pokemon.spDefense
+             << setw(5) << pokemon.speed
+             << endl;
+    }
+
+    cout << "--------------------------------------------------------------------------------------\n";
+}
+
+
 
 int main() {
     vector<Pokemon> pokemonList;
@@ -272,7 +323,8 @@ int main() {
         cout << "4. List Pokemon by Dex Number\n";
         cout << "5. Find Highest, Lowset and Average Pokemon Stat\n";
         cout << "6. Find Pokemon by Type\n";
-        cout << "7. Exit\n";
+        cout << "7. Display Pokemon by assorted Height\n";
+        cout << "8. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -318,8 +370,11 @@ int main() {
                 displayAllPokemon(results);
                 break;
             }
-
-            case 7:
+            case 7: {
+                displayPokemonByHeightDescending(pokemonList);
+                break;
+            }
+            case 8:
                 cout << "Exiting program. Goodbye!\n";
             break;
             default:
